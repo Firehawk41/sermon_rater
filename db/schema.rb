@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_03_162233) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_15_135806) do
+  create_table "admins", force: :cascade do |t|
+    t.string "email"
+    t.string "password_digest"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admins_on_email"
+  end
+
   create_table "questions", force: :cascade do |t|
     t.string "content"
     t.datetime "created_at", null: false
@@ -33,7 +42,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_03_162233) do
     t.integer "speaker_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "token"
     t.index ["speaker_id"], name: "index_sermons_on_speaker_id"
+    t.index ["token"], name: "index_sermons_on_token"
   end
 
   create_table "speakers", force: :cascade do |t|

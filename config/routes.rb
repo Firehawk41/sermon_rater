@@ -1,7 +1,27 @@
 Rails.application.routes.draw do
-  get "responses/create"
-  get "sermons/show"
-  get "sermons/results"
+  root "public#home"
+  get "/r/:token", to: "public#rate", as: :rate_by_token
+
+  resources :sermons, only: [ :index, :show ] do
+    resources :responses, only: [ :new, :create ]
+  end
+  namespace :admin do
+    get "login", to: "sessions#new"
+    post "login", to: "sessions#create"
+    delete "logout", to: "sessions#destroy"
+    root to: "dashboard#index" # admin home
+    resources :speakers
+    resources :sermons do
+      member do
+        get :results
+        get :qr # show QR / printable link
+        get :export_csv
+      end
+    end
+  end
+
+
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -1,0 +1,37 @@
+<!-- app/views/responses/new.html.erb -->
+<h2>Rate the Sermon: <%= @sermon.title %></h2>
+
+<%= form_with url: sermon_responses_path(@sermon), method: :post do |f| %>
+  <% @questions.each do |question| %>
+    <div class="question">
+      <p><%= question.content %></p>
+
+      <%= hidden_field_tag "responses[][question_id]", question.id %>
+
+      <div class="slider-container" style="display: flex; align-items: center; gap: 0.5rem;">
+        <span>Strongly Disagree</span>
+        <%= range_field_tag "responses[][value]", 3, in: 1..5, step: 1, id: "response_value_#{question.id}", data: { question_id: question.id } %>
+        <span>Strong Agree</span>
+      </div>
+
+      <div id="value-display-<%= question.id %>">3</div>
+    </div>
+
+    
+  <% end %>
+  
+  <%= f.submit "Submit" %>
+<% end %>
+
+<script>
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        const qid = slider.dataset.questionId;
+        const display = document.getElementById(`value-display-${qid}`);
+        if (!display) return;
+        // set initial display to the current slider value
+        display.textContent = slider.value;
+        slider.addEventListener('input', () => {
+            display.textContent = slider.value;
+        });
+    });
+</script>
